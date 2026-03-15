@@ -5,9 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import StudentAuth from "./pages/StudentAuth";
 import StudentLogin from "./pages/StudentLogin";
-import StudentSignup from "./pages/StudentSignup";
-import OrganizerLogin from "./pages/OrganizerLogin";
 import OrganizerSignup from "./pages/OrganizerSignup";
+import OrganizerLogin from "./pages/OrganizerLogin";
+import OrganizerSignUp from "./pages/OrganizerSignUp";
 
 /* Dashboards */
 import OrganizerDashboard from "./dashboard/organizer/OrganizerDashboard";
