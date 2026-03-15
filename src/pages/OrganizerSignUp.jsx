@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function OrganizerSignup() {
+function OrganizerSignUp() {
 
   const navigate = useNavigate();
 
@@ -141,4 +141,4 @@ function OrganizerSignup() {
   );
 }
 
-export default OrganizerSignup;
+export default OrganizerSignUp;
