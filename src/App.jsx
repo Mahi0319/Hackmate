@@ -7,6 +7,7 @@ import StudentAuth from "./pages/StudentAuth";
 import StudentLogin from "./pages/StudentLogin";
 import OrganizerSignup from "./pages/OrganizerSignup";
 import OrganizerLogin from "./pages/OrganizerLogin";
+// ✅ Matches the actual file
 import OrganizerSignUp from "./pages/OrganizerSignUp";
 
 /* Dashboards */
