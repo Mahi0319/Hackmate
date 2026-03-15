@@ -75,7 +75,7 @@ function App() {
 
         {/* Organizer Auth */}
         <Route path="/organizer-login" element={<OrganizerLogin />} />
-        <Route path="/organizer-signup" element={<OrganizerSignup />} />
+        <Route path="/organizer-signup" element={<OrganizerSignUp />} />
 
         {/* Organizer */}
         <Route path="/organizer-dashboard" element={<OrganizerDashboard />} />
