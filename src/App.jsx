@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -5,10 +6,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import StudentAuth from "./pages/StudentAuth";
 import StudentLogin from "./pages/StudentLogin";
-import OrganizerSignup from "./pages/OrganizerSignup";
+import StudentSignup from "./pages/StudentSignup";          // ✅ Added
 import OrganizerLogin from "./pages/OrganizerLogin";
-// ✅ Matches the actual file
-import OrganizerSignUp from "./pages/OrganizerSignUp";
+import OrganizerSignUp from "./pages/OrganizerSignUp";      // ✅ Correct casing
 
 /* Dashboards */
 import OrganizerDashboard from "./dashboard/organizer/OrganizerDashboard";
@@ -48,7 +48,7 @@ function App() {
         {/* Student Auth */}
         <Route path="/student-auth" element={<StudentAuth />} />
         <Route path="/student-login" element={<StudentLogin />} />
-        <Route path="/student-signup" element={<StudentSignup />} />
+        <Route path="/student-signup" element={<StudentSignup />} />  {/* ✅ Correct */}
 
         {/* Student Dashboard */}
         <Route path="/student-dashboard" element={<StudentDashboard />} />
@@ -76,14 +76,15 @@ function App() {
 
         {/* Organizer Auth */}
         <Route path="/organizer-login" element={<OrganizerLogin />} />
-        <Route path="/organizer-signup" element={<OrganizerSignUp />} />
+        <Route path="/organizer-signup" element={<OrganizerSignUp />} />   {/* ✅ Correct */}
 
-        {/* Organizer */}
+        {/* Organizer Dashboard */}
         <Route path="/organizer-dashboard" element={<OrganizerDashboard />} />
         <Route path="/create-event" element={<CreateEvent />} />
         <Route path="/organizer-events" element={<OrganizerEvents />} />
         <Route path="/manage-event/:id" element={<ManageEvent />} />
         <Route path="/organizer-analytics" element={<OrganizerAnalytics />} />
+
       </Routes>
     </Router>
   );
