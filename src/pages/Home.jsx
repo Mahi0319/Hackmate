@@ -12,10 +12,28 @@ function Home() {
       <div className="absolute w-[500px] h-[500px] bg-purple-500 rounded-full blur-[140px] opacity-30 bottom-[-150px] right-[-150px]"></div>
       <div className="absolute w-[300px] h-[300px] bg-cyan-400 rounded-full blur-[120px] opacity-20 top-[40%] left-[20%]"></div>
 
-      {/* Marquee */}
-      <marquee className="absolute top-0 w-full bg-white text-black p-3 font-semibold tracking-wide">
-        Welcome to HackMate 🚀 Find Hackathons, Workshops and Events Across Colleges
-      </marquee>
+      {/* Marquee replacement */}
+      <div className="absolute top-0 w-full overflow-hidden bg-white text-black font-semibold tracking-wide">
+        <div
+          style={{
+            display: "inline-block",
+            whiteSpace: "nowrap",
+            padding: "0.75rem 0",
+            animation: "marquee 15s linear infinite",
+          }}
+        >
+          Welcome to HackMate 🚀 Find Hackathons, Workshops and Events Across Colleges
+        </div>
+      </div>
+
+      <style>
+        {`
+          @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+          }
+        `}
+      </style>
 
       {/* Main Hero Card */}
       <div className="relative z-10 backdrop-blur-xl bg-white/10 border border-white/20 shadow-[0px_20px_80px_rgba(0,0,0,0.6)] rounded-[40px] p-14 max-w-3xl text-center">
@@ -28,7 +46,6 @@ function Home() {
 
         {/* Buttons */}
         <div className="flex gap-8 justify-center">
-          {/* Join Events */}
           <button
             className="bg-white text-black px-10 py-5 rounded-2xl font-semibold text-lg shadow-2xl hover:scale-110 hover:shadow-white/30 transition duration-300"
             onClick={() => navigate("/student-auth")}
@@ -36,16 +53,15 @@ function Home() {
             Join Events
           </button>
 
-          {/* Organize Event */}
           <button
             className="bg-gradient-to-r from-blue-500 to-indigo-500 px-10 py-5 rounded-2xl font-semibold text-lg shadow-2xl hover:scale-110 transition duration-300"
             onClick={() => {
-              // Check if organizer is already logged in
               const currentOrganizer = JSON.parse(localStorage.getItem("currentOrganizer"));
-              if (currentOrganizer) {
+              const loggedIn = localStorage.getItem("organizerLoggedIn");
+
+              if (currentOrganizer && loggedIn) {
                 navigate("/organizer-dashboard");
               } else {
-                // Ask if they have an account
                 const hasAccount = window.confirm(
                   "Do you already have an Organizer account?\nPress OK for Login, Cancel for Sign Up"
                 );
@@ -61,7 +77,6 @@ function Home() {
           </button>
         </div>
 
-        {/* Bottom Text */}
         <p className="text-gray-300 mt-10 text-sm">Built for Students • Designed for Colleges</p>
       </div>
     </div>

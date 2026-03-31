@@ -6,9 +6,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import StudentAuth from "./pages/StudentAuth";
 import StudentLogin from "./pages/StudentLogin";
-import StudentSignup from "./pages/StudentSignup";          // ✅ Added
+import StudentSignup from "./pages/StudentSignup";
 import OrganizerLogin from "./pages/OrganizerLogin";
-import OrganizerSignUp from "./pages/OrganizerSignUp";      // ✅ Correct casing
+import OrganizerSignUp from "./pages/OrganizerSignUp";
 
 /* Dashboards */
 import OrganizerDashboard from "./dashboard/organizer/OrganizerDashboard";
@@ -19,6 +19,7 @@ import OrganizerEvents from "./dashboard/organizer/OrganizerEvents";
 import ManageEvent from "./dashboard/organizer/ManageEvent";
 import RecommendedEvents from "./components/RecommendedEvents";
 import OrganizerAnalytics from "./dashboard/organizer/OrganizerAnalytics";
+import MyCertificates from "./dashboard/student/MyCertificates";
 
 /* Events */
 import CreateEvent from "./events/CreateEvent";
@@ -26,7 +27,6 @@ import ExploreEvents from "./events/ExploreEvents";
 import EventDetails from "./events/EventDetails";
 import JoinEventForm from "./events/JoinEventForm";
 import ViewParticipants from "./events/ViewParticipants";
-import Certificate from "./events/Certificate";
 
 /* Teams */
 import CreateTeam from "./teams/CreateTeam";
@@ -36,6 +36,13 @@ import TeamRequests from "./teams/TeamRequests";
 
 /* Profile */
 import StudentProfile from "./profile/StudentProfile";
+
+/* NFC */
+import NFCAttendanceScan from "./components/NFCAttendanceScan";
+
+/* Certificates */
+import Certificate from "./components/Certificate";  
+import CertificateBuilder from "./certificates/CertificateBuilder";    // ✅ NEW
 
 function App() {
   return (
@@ -48,17 +55,23 @@ function App() {
         {/* Student Auth */}
         <Route path="/student-auth" element={<StudentAuth />} />
         <Route path="/student-login" element={<StudentLogin />} />
-        <Route path="/student-signup" element={<StudentSignup />} />  {/* ✅ Correct */}
+        <Route path="/student-signup" element={<StudentSignup />} />
 
         {/* Student Dashboard */}
         <Route path="/student-dashboard" element={<StudentDashboard />} />
 
-        {/* Events */}
+        {/* Explore & Event System */}
         <Route path="/explore-events" element={<ExploreEvents />} />
-        <Route path="/event-details/:id" element={<EventDetails />} />
-        <Route path="/join/:id" element={<JoinEventForm />} />
+        <Route path="/event/:id" element={<EventDetails />} />
+        <Route path="/join-event/:id" element={<JoinEventForm />} />
         <Route path="/participants/:id" element={<ViewParticipants />} />
+
+        {/* Student Certificates */}
+        <Route path="/my-certificates" element={<MyCertificates />} />
         <Route path="/certificate/:id" element={<Certificate />} />
+
+        {/* Certificate Builder (Organizer) */}
+        <Route path="/certificate-builder" element={<CertificateBuilder />} />
 
         {/* Teams */}
         <Route path="/create-team/:id" element={<CreateTeam />} />
@@ -76,7 +89,7 @@ function App() {
 
         {/* Organizer Auth */}
         <Route path="/organizer-login" element={<OrganizerLogin />} />
-        <Route path="/organizer-signup" element={<OrganizerSignUp />} />   {/* ✅ Correct */}
+        <Route path="/organizer-signup" element={<OrganizerSignUp />} />
 
         {/* Organizer Dashboard */}
         <Route path="/organizer-dashboard" element={<OrganizerDashboard />} />
@@ -84,6 +97,9 @@ function App() {
         <Route path="/organizer-events" element={<OrganizerEvents />} />
         <Route path="/manage-event/:id" element={<ManageEvent />} />
         <Route path="/organizer-analytics" element={<OrganizerAnalytics />} />
+
+        {/* NFC Attendance */}
+        <Route path="/scan-nfc/:eventId" element={<NFCAttendanceScan />} />
 
       </Routes>
     </Router>

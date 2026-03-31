@@ -1,160 +1,143 @@
-import React, { useState } from "react";
+// File: events/JoinEventForm.jsx
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 function JoinEventForm() {
-
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [formData,setFormData] = useState({
-    leaderName:"",
-    rollNo:"",
-    email:"",
-    ideaTitle:"",
-    ideaDescription:"",
-    mvpLink:"",
-    hostedLink:"",
-    college:"",
-    location:"",
-    teamSize:""
+  const [event, setEvent] = useState(null);
+  const [student, setStudent] = useState(null);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    teamOption: "solo",
+    teamName: "",
   });
 
-  const handleChange = (e)=>{
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  useEffect(() => {
+    const events = JSON.parse(localStorage.getItem("events")) || [];
+    const found = events.find((ev) => String(ev.id) === String(id));
+    setEvent(found);
+
+    const logged = JSON.parse(localStorage.getItem("currentStudent"));
+    if (!logged) return navigate("/student-login");
+    setStudent(logged);
+
+    setForm((f) => ({ ...f, name: logged.name, email: logged.email }));
+  }, [id, navigate]);
+
+  if (!event) return <div className="p-10 text-white">Event not found.</div>;
+
+  const alreadyRegistered = () => {
+    const registrations = JSON.parse(localStorage.getItem("registrations")) || [];
+    return registrations.some(
+      (r) => r.eventId === event.id && r.studentId === student.id
+    );
   };
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const submissions = JSON.parse(localStorage.getItem("submissions")) || [];
+    if (alreadyRegistered()) {
+      alert("You are already registered for this event.");
+      return navigate("/my-registrations");
+    }
 
-    submissions.push({
-      eventId:id,
-      ...formData
-    });
+    const registrations = JSON.parse(localStorage.getItem("registrations")) || [];
 
-    localStorage.setItem("submissions", JSON.stringify(submissions));
+    const newReg = {
+      id: Date.now(),
+      eventId: event.id,
+      studentId: student.id,
+      name: form.name,
+      email: form.email,
+      mobile: form.mobile,
+      teamOption: form.teamOption,
+      teamName: form.teamOption === "create" ? form.teamName : "",
+      status: "pending",
+    };
 
-    alert("Submission Successful 🚀");
+    localStorage.setItem("registrations", JSON.stringify([...registrations, newReg]));
 
-    navigate("/student-dashboard");
+    alert("Registration successful!");
+    navigate("/my-registrations");
   };
 
   return (
-
-    <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-10">
-
-      <div className="w-full max-w-3xl bg-white/10 backdrop-blur-xl border border-white/10 rounded-3xl p-10">
-
-        <h1 className="text-3xl font-bold mb-8 text-center">
-          Join Event 🚀
+    <div className="min-h-screen p-10 bg-[#0b0f1a] text-white">
+      <div className="max-w-2xl mx-auto bg-gradient-to-br from-purple-700 to-indigo-700 p-8 rounded-xl shadow-neon">
+        <h1 className="text-3xl font-bold mb-6 text-neon-pink">
+          Register for {event.title}
         </h1>
 
-        <form onSubmit={handleSubmit} className="grid gap-6">
-
+        <form className="space-y-5" onSubmit={handleSubmit}>
           <input
             type="text"
-            name="leaderName"
-            placeholder="Team Leader Name"
-            onChange={handleChange}
-            required
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
+            value={form.name}
+            disabled
+            className="w-full p-3 rounded bg-gray-900 text-white"
           />
-
-          <input
-            type="text"
-            name="rollNo"
-            placeholder="College Roll Number"
-            onChange={handleChange}
-            required
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
-          />
-
           <input
             type="email"
-            name="email"
-            placeholder="Email ID"
-            onChange={handleChange}
-            required
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
+            value={form.email}
+            disabled
+            className="w-full p-3 rounded bg-gray-900 text-white"
           />
-
           <input
             type="text"
-            name="ideaTitle"
-            placeholder="Idea Title"
-            onChange={handleChange}
             required
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
+            placeholder="Mobile Number"
+            value={form.mobile}
+            onChange={(e) => setForm({ ...form, mobile: e.target.value })}
+            className="w-full p-3 rounded bg-gray-800 text-white"
           />
 
-          <textarea
-            name="ideaDescription"
-            placeholder="Idea Description"
-            onChange={handleChange}
-            required
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none h-28"
-          />
+          {event.type === "Hackathon" && (
+            <div>
+              <select
+                value={form.teamOption}
+                onChange={(e) => setForm({ ...form, teamOption: e.target.value })}
+                className="w-full p-3 rounded bg-gray-800 text-white"
+              >
+                <option value="solo">Solo Participation</option>
+                <option value="create">Create Team</option>
+                <option value="join">Join Existing Team</option>
+              </select>
 
-          <input
-            type="url"
-            name="mvpLink"
-            placeholder="MVP / GitHub Link"
-            onChange={handleChange}
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
-          />
+              {form.teamOption === "create" && (
+                <input
+                  type="text"
+                  required
+                  placeholder="Team Name"
+                  value={form.teamName}
+                  onChange={(e) => setForm({ ...form, teamName: e.target.value })}
+                  className="w-full p-3 rounded bg-gray-800 text-white mt-3"
+                />
+              )}
 
-          <input
-            type="url"
-            name="hostedLink"
-            placeholder="Hosted Project Link"
-            onChange={handleChange}
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
-          />
-
-          <input
-            type="text"
-            name="college"
-            placeholder="College Name"
-            onChange={handleChange}
-            required
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
-          />
-
-          <input
-            type="text"
-            name="location"
-            placeholder="College Location"
-            onChange={handleChange}
-            required
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
-          />
-
-          <input
-            type="number"
-            name="teamSize"
-            placeholder="Team Size"
-            onChange={handleChange}
-            required
-            className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none"
-          />
+              {form.teamOption === "join" && (
+                <button
+                  type="button"
+                  onClick={() => navigate(`/explore-teams?event=${event.id}`)}
+                  className="mt-3 w-full bg-blue-600 py-2 rounded"
+                >
+                  Explore Teams
+                </button>
+              )}
+            </div>
+          )}
 
           <button
             type="submit"
-            className="bg-gradient-to-r from-blue-500 to-indigo-500 py-3 rounded-xl font-semibold hover:scale-105 transition"
+            className="w-full bg-green-500 py-3 rounded-lg font-semibold mt-4 hover:bg-green-600 transition"
           >
-            Submit Application
+            Register Now
           </button>
-
         </form>
-
       </div>
-
     </div>
-
   );
 }
 

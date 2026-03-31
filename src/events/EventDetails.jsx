@@ -1,83 +1,74 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import Countdown from "react-countdown";
+// File: events/EventDetails.jsx
+
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 
 function EventDetails() {
-
   const { id } = useParams();
-  const navigate = useNavigate();
+  const [event, setEvent] = useState(null);
 
-  const events = JSON.parse(localStorage.getItem("events")) || [];
-  const event = events[id];
+  useEffect(() => {
+    const events = JSON.parse(localStorage.getItem("events")) || [];
+    const found = events.find((ev) => String(ev.id) === String(id));
+    setEvent(found);
+  }, [id]);
 
   if (!event) {
-    return <div className="p-10 text-xl">Event not found</div>;
+    return (
+      <div className="p-10">
+        <h2 className="text-xl text-red-600">Event not found</h2>
+      </div>
+    );
   }
 
   return (
+    <div className="p-10 bg-gray-100 min-h-screen">
 
-    <div className="min-h-screen bg-gray-100 flex justify-center p-10">
+      <div className="max-w-4xl mx-auto bg-white p-6 shadow rounded-xl">
+        
+        {/* Banner */}
+        <img
+          src={event.banner || "https://via.placeholder.com/800x300"}
+          className="w-full h-60 object-cover rounded"
+          alt="Event Banner"
+        />
 
-      <div className="bg-white shadow-xl rounded-xl max-w-3xl w-full overflow-hidden">
+        {/* Title */}
+        <h1 className="text-4xl font-bold mt-6">{event.title}</h1>
 
-        {/* Event Poster */}
+        {/* Info Section */}
+        <div className="mt-4 text-gray-700 space-y-2">
+          <p><strong>Date:</strong> {event.date}</p>
+          <p><strong>Mode:</strong> {event.mode}</p>
 
-        <div className="h-60 bg-indigo-600 flex items-center justify-center text-white text-3xl font-bold">
-          {event.title}
+          {event.mode === "Offline" && (
+            <p><strong>Venue:</strong> {event.venue}</p>
+          )}
+
+          <p><strong>Type:</strong> {event.type}</p>
         </div>
 
-        <div className="p-8">
-
-          <h1 className="text-3xl font-bold mb-4">
-            {event.title}
-          </h1>
-
-          <p className="text-gray-600 mb-4">
+        {/* Description */}
+        <div className="mt-6">
+          <h2 className="text-2xl font-semibold mb-2">About the Event</h2>
+          <p className="text-gray-600 leading-relaxed">
             {event.description}
           </p>
+        </div>
 
-          <p className="text-gray-500 mb-6">
-            Event Date: {event.date}
-          </p>
-
-          {/* Countdown */}
-
-          <div className="bg-gray-100 p-4 rounded-lg mb-6">
-
-            <h2 className="text-lg font-semibold mb-2">
-              Hackathon Starts In
-            </h2>
-
-            <Countdown date={new Date(event.date)} />
-
-          </div>
-
-          {/* Buttons */}
-
-          <div className="flex gap-4">
-
-            <button
-              onClick={() => navigate(`/join/${id}`)}
-              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
-            >
-              Register Now
-            </button>
-
-            <button
-              onClick={() => navigate(`/create-team/${id}`)}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
-            >
-              Create Team
-            </button>
-
-          </div>
-
+        {/* Register Button */}
+        <div className="mt-8 flex justify-end">
+          <Link
+            to={`/join-event/${event.id}`}
+            className="bg-blue-600 px-6 py-3 text-white rounded-lg text-lg"
+          >
+            Register Now
+          </Link>
         </div>
 
       </div>
 
     </div>
-
   );
 }
 

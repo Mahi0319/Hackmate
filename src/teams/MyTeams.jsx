@@ -1,65 +1,49 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-function MyTeams(){
+function MyTeams() {
+  const [teams, setTeams] = useState([]);
+  const [student, setStudent] = useState(null);
 
-  const [teams,setTeams] = useState([]);
+  useEffect(() => {
+    const logged = JSON.parse(localStorage.getItem("student"));
+    setStudent(logged);
 
-  useEffect(()=>{
+    const allTeams = JSON.parse(localStorage.getItem("teams")) || [];
+    const my = allTeams.filter((t) => t.leaderId === logged?.id);
+    setTeams(my);
+  }, []);
 
-    const storedTeams = JSON.parse(localStorage.getItem("teams")) || [];
-    const student = JSON.parse(localStorage.getItem("currentStudent"));
+  return (
+    <div className="p-10 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6">My Teams</h1>
 
-    const myTeams = storedTeams.filter(team =>
-      team.members.includes(student?.name)
-    );
-
-    setTeams(myTeams);
-
-  },[]);
-
-  return(
-
-    <div className="min-h-screen bg-slate-950 text-white p-10">
-
-      <h1 className="text-4xl font-bold mb-10">
-        My Teams
-      </h1>
-
-      {teams.length === 0 ?(
-
-        <p className="text-gray-400">No Teams Joined Yet</p>
-
-      ):(
-        <div className="grid grid-cols-3 gap-8">
-
-          {teams.map((team)=>(
-            <div
-              key={team.id}
-              className="bg-white/10 backdrop-blur-xl border border-white/10 p-6 rounded-2xl"
-            >
-
-              <h2 className="text-xl font-semibold mb-2">
-                {team.teamName}
-              </h2>
-
-              <p className="text-gray-400 mb-2">
-                Leader: {team.leader}
+      {teams.length === 0 ? (
+        <p className="text-gray-500">You have not created any teams.</p>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-8">
+          {teams.map((team) => (
+            <div key={team.id} className="bg-white p-6 rounded-xl shadow">
+              <h2 className="text-xl font-semibold">{team.teamName}</h2>
+              <p className="text-gray-600 mt-2">
+                Members: {team.members.length}
+              </p>
+              <p className="text-gray-600 mt-1">
+                Requests: {team.requests.length}
               </p>
 
-              <p className="text-gray-400">
-                Skills: {team.skills}
-              </p>
-
+              <Link
+                to={`/team-requests?team=${team.id}`}
+                className="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                Manage Team
+              </Link>
             </div>
           ))}
-
         </div>
       )}
-
     </div>
-
-  )
-
+  );
 }
 
 export default MyTeams;
